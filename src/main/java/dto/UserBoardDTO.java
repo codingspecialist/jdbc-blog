@@ -1,14 +1,14 @@
-package model;
+package dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import model.Board;
+import model.User;
 
 @Getter @Setter @AllArgsConstructor @ToString
-public class User {
-    private Integer uId;
-    private String uUsername;
-    private String uPassword;
-    private String uEmail;
+public class UserBoardDTO {
+    private User user;
+    private Board board;
 }

@@ -1,5 +1,7 @@
 package model;
 
+import dto.BoardDetailDTO;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -16,6 +18,34 @@ public class BoardDAO {
 
     public BoardDAO(Connection connection) {
         this.connection = connection;
+    }
+
+    public BoardDetailDTO findByIdWithUser(Integer id){
+        BoardDetailDTO boardDetailDTO = null;
+        String sql = "select bt.*, ut.u_username, ut.u_password, ut.u_email\n" +
+                "from board_tb bt\n" +
+                "left outer join user_tb ut on bt.u_id = ut.u_id\n" +
+                "where b_id = ?";
+
+        try {
+            PreparedStatement pstmt = connection.prepareStatement(sql);
+            pstmt.setInt(1, id);
+            ResultSet rs = pstmt.executeQuery();
+            if(rs.next()){
+                // 오브젝트 매핑 (테이블 데이터 -> 자바 오브젝트)
+                boardDetailDTO = new BoardDetailDTO(
+                        rs.getInt("b_id"),
+                        rs.getInt("u_id"),
+                        rs.getString("u_username"),
+                        rs.getString("b_title"),
+                        rs.getString("b_content")
+                );
+
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return boardDetailDTO;
     }
 
     public void insert(Board board){
